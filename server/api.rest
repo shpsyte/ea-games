@@ -1,0 +1,51 @@
+// for testing routes
+
+@baseUrl = http://localhost:3333
+
+GET {{ baseUrl }}/ping 
+Content-Type: application/json
+
+### take all
+GET {{ baseUrl }}/tasks/all
+Content-Type: application/json
+
+
+### Error state
+GET {{ baseUrl }}/tasks/ongoing/ERROR/10
+Content-Type: application/json
+
+### GET 10 planned tasks
+GET {{ baseUrl }}/tasks/planned/0/10/
+Content-Type: application/json
+
+
+### POST a task with error
+POST {{ baseUrl }}/task
+Content-Type: application/json
+
+{
+    "content": "test",
+    "coverUrl": "sfs",
+    "isPublic": "1"
+}
+
+### POST a task without error
+POST {{ baseUrl }}/task
+Content-Type: application/json
+
+{
+    "title": "a joao 1",
+    "state": "planned"
+}
+
+### DELETE a task
+DELETE  {{ baseUrl }}/task/a3c44c5d-ff3b-4a3f-8849-fc734cae60c8
+Content-Type: application/json
+
+ 
+
+### DELETE all task
+DELETE  {{ baseUrl }}/task/all
+Content-Type: application/json
+
+ 

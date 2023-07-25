@@ -1,12 +1,13 @@
+import 'dotenv/config'
+
 import fastify from 'fastify'
-import { PrismaClient } from '@prisma/client'
+import { pingRoutes } from './routes/ping'
+import { taskRoutes } from './routes/task'
+
 const app = fastify()
 
-const prisma = new PrismaClient()
-
-app.get('/hello', async (request, reply) => {
-  return prisma.task.findMany()
-})
+app.register(pingRoutes)
+app.register(taskRoutes)
 
 app
   .listen({
