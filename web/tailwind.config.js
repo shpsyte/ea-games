@@ -6,7 +6,20 @@ module.exports = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    screens: {
+      mobile: '320px',
+      // => @media (min-width: 320px) { ... }
+      tablet: '640px',
+      // => @media (min-width: 640px) { ... }
+      laptop: '1024px',
+      // => @media (min-width: 1024px) { ... }
+    },
     extend: {
+      colors: {
+        primary: '#333333',
+        secondary: '#222222',
+        tertiary: '#cccccc',
+      },
       fontFamily: {
         sans: ['roboto', 'sans-serif'],
       },

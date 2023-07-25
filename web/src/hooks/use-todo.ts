@@ -1,25 +1,50 @@
 import { StateCreator, create } from 'zustand'
 import api from '@/lib/api'
+import { persist } from 'zustand/middleware'
+import notify from '@/components/Notify'
 
-type Todo = {
-  id: number
-  title: string
-  states: States
+type TaskStore = {
+  tasks: Task[]
+  draggedTask: string | null | undefined
+  setDraggedTask: (id?: string) => void
+  addTask: (todo: Task) => void
+  deleteTask: (id: string) => void
+  deleteAllTasks: () => void
+  moveTask: (id: string, state: keyof typeof States) => void
+  markAsDone: (id: string) => void
 }
 
-type TodoStore = {
-  todos: Todo[]
-}
-
-const store: StateCreator<TodoStore> = (set) => ({
-  todos: [],
-  addTodo: ({ title, states }: Todo) =>
+const store: StateCreator<TaskStore> = (set, getState) => ({
+  tasks: [],
+  draggedTask: null,
+  deleteAllTasks: () => set({ tasks: [] as Task[] }),
+  setDraggedTask: (id?: string) => set((s) => ({ draggedTask: id })),
+  addTask: ({ id, title, state }: Task) => {
     set((s) => ({
-      todos: [...s.todos, { id: s.todos.length + 1, title, states }],
+      tasks: [
+        ...s.tasks,
+        { id, title, state, createdAt: new Date().toISOString(), done: false },
+      ],
+    }))
+    notify({
+      message: 'Task successfully',
+    })
+  },
+
+  deleteTask: (id: string) =>
+    set((s) => ({ tasks: s.tasks.filter((task) => task.id !== id) })),
+  markAsDone: (id: string) =>
+    set((s) => ({
+      tasks: s.tasks.map((task) =>
+        task.id === id ? { ...task, done: true, state: 'DONE' } : task
+      ),
     })),
-  deleteTodo: ({ title }: Todo) =>
-    set((s) => ({ todos: s.todos.filter((task) => task.title !== title) })),
-  moveTodo: () => set((s) => s),
+  moveTask: (id: string, state: keyof typeof States) =>
+    set((s) => ({
+      tasks: s.tasks.map((task) =>
+        task.id === id ? { ...task, state } : task
+      ),
+    })),
 })
 
 export const useTodo = create(store)

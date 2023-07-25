@@ -7,8 +7,17 @@ type MetaDataType = {
   noIndex?: boolean
 }
 
+type Task = {
+  id: string
+  title: string
+  state: keyof typeof States
+  createdAt: string
+  done?: boolean
+}
+
 enum States {
-  TODO = 'TODO',
-  DOING = 'DOING',
-  DONE = 'DONE',
+  'PLANNED' = 'PLANNED',
+  'ONGOING' = 'ON GOING',
+  'ONHOLD' = 'ON HOLD',
+  'DONE' = 'DONE',
 }

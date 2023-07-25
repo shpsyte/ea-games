@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "awesome-toast-component": "^2.0.6",
+    "clsx": "^2.0.0",
+    "react-nextjs-toast": "^1.2.5",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.2"
+  }
+}
