@@ -16,6 +16,7 @@
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",
+    "awesome-toast-component": "^2.0.6",
     "axios": "^1.4.0",
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.12",
@@ -26,7 +27,10 @@
     "react-feather": "^2.0.10",
     "tailwindcss": "3.3.3",
     "typescript": "5.1.6",
-    "zustand": "^4.3.9"
+    "zustand": "^4.3.9",
+    "clsx": "^2.0.0",
+    "react-nextjs-toast": "^1.2.5",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.9",
@@ -40,6 +44,7 @@
     "jest": "^29.6.1",
     "jest-environment-jsdom": "28.1.0",
     "prettier-plugin-tailwindcss": "^0.3.0",
-    "ts-jest": "^29.1.1"
+    "ts-jest": "^29.1.1",
+    "@types/uuid": "^9.0.2"
   }
 }
