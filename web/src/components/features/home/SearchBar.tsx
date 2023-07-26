@@ -44,14 +44,18 @@ export default function SearchBar() {
           <Input
             ref={refInput}
             placeholder="Add a new task"
-            data-testid="add-task"
+            data-testid="add-task-input"
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 onAddTask()
               }
             }}
           />
-          <Button className="min-w-max" onClick={onAddTask}>
+          <Button
+            className="min-w-max"
+            onClick={onAddTask}
+            data-testid="add-task-btn"
+          >
             Add
           </Button>
         </div>

@@ -29,6 +29,7 @@ export default function Menu() {
       <h2 className="text-2xl font-bold text-white">Marvelous v2.0</h2>
       {!confirm && (
         <button
+          data-testid="delete-all-btn"
           disabled={total === 0}
           onClick={() => setConfirm(true)}
           className={clsx('cursor-pointer underline outline-none ', {
@@ -42,7 +43,7 @@ export default function Menu() {
         <>
           {/* create a modal to confirm the action */}
           <Modal.Root>
-            <Modal.Header>
+            <Modal.Header data-testid="modal">
               <h2 className="text-lg font-medium text-gray-900">
                 Are you sure you want to delete all tasks?
               </h2>

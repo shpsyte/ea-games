@@ -6,6 +6,10 @@ type TaskStore = {
   tasks: Task[]
   states: State[]
   draggedTask: string | null | undefined
+  broadcast: BroadcastChannel | null
+  reload: boolean
+  setReload: () => void
+  setBroadcast: (channel: BroadcastChannel) => void
   setTasks: (tasks: Task[]) => void
   pushTasks: (tasks: Task[]) => void
   setStates: (states: State[]) => void
@@ -21,6 +25,10 @@ const store: StateCreator<TaskStore> = (set, getState) => ({
   tasks: [],
   states: [],
   draggedTask: null,
+  broadcast: null,
+  reload: false,
+  setReload: () => set((s) => ({ reload: !s.reload })),
+  setBroadcast: (channel: BroadcastChannel) => set({ broadcast: channel }),
   pushTasks: (tasks: Task[]) => set((s) => ({ tasks: [...s.tasks, ...tasks] })),
   setStates: (states: State[]) => set({ states }),
   setTasks: (tasks: Task[]) =>
@@ -40,6 +48,8 @@ const store: StateCreator<TaskStore> = (set, getState) => ({
         message: 'An error occurred while deleting tasks.',
         type: 'error',
       })
+    } finally {
+      broadcastBoard()
     }
   },
   setDraggedTask: (id?: string) => set((s) => ({ draggedTask: id })),
@@ -75,6 +85,8 @@ const store: StateCreator<TaskStore> = (set, getState) => ({
         message: 'An error occurred while creating the task.',
         type: 'error',
       })
+    } finally {
+      broadcastBoard()
     }
   },
 
@@ -91,6 +103,8 @@ const store: StateCreator<TaskStore> = (set, getState) => ({
         message: 'An error occurred while deleting the task.',
         type: 'error',
       })
+    } finally {
+      broadcastBoard()
     }
   },
   markAsDone: async (id: string) => {
@@ -120,6 +134,8 @@ const store: StateCreator<TaskStore> = (set, getState) => ({
         message: 'An error occurred while updating the task.',
         type: 'error',
       })
+    } finally {
+      broadcastBoard()
     }
   },
   moveTask: async (id: string, state: keyof typeof States, done?: boolean) => {
@@ -138,8 +154,20 @@ const store: StateCreator<TaskStore> = (set, getState) => ({
         message: 'An error occurred while updating the task',
         type: 'error',
       })
+    } finally {
+      broadcastBoard()
     }
   },
 })
+
+function broadcastBoard() {
+  try {
+    const { broadcast, tasks } = useTask.getState()
+    broadcast?.postMessage({
+      type: 'update-board',
+      payload: tasks,
+    })
+  } catch {}
+}
 
 export const useTask = create(store)

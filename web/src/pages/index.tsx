@@ -1,3 +1,4 @@
+import notify from '@/components/Notify'
 import { Column } from '@/components/features/home/Columns'
 import SearchBar from '@/components/features/home/SearchBar'
 import AppLayout from '@/components/interface/AppLayout'
@@ -7,14 +8,17 @@ import { fetchAllTask, fetchTask } from '@/services/fetch-task'
 import { useEffect, useState } from 'react'
 import { shallow } from 'zustand/shallow'
 
+let broadcastChannel: BroadcastChannel
 export default function Home() {
   // initialize the state
 
-  const { setTasks, states, setSate } = useTask(
+  const { setTasks, states, setSate, setBroadcast, setReload } = useTask(
     (s) => ({
       setTasks: s.setTasks,
       states: s.states.filter((a) => a.show),
       setSate: s.setStates,
+      setBroadcast: s.setBroadcast,
+      setReload: s.setReload,
     }),
     shallow
   )
@@ -29,7 +33,24 @@ export default function Home() {
       setTasks(allTask)
     }
 
-    states().then(() => tasks())
+    broadcastChannel = new BroadcastChannel('task')
+
+    states()
+      .then(() => tasks())
+      .finally(() => {
+        setBroadcast(broadcastChannel)
+      })
+
+    broadcastChannel.onmessage = (message) => {
+      if (message.data.type === 'update-board') {
+        setTasks(message.data.payload)
+        notify({
+          message: 'Board updated successfully',
+        })
+      }
+    }
+
+    return () => {}
   }, [])
 
   return (
