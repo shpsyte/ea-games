@@ -1,4 +1,5 @@
-import { ToastContainer } from 'react-nextjs-toast' //eslint-disable-line
+//@ts-ignore
+import { ToastContainer } from 'react-nextjs-toast'
 import '@/styles/globals.css'
 
 import type { AppProps } from 'next/app'
