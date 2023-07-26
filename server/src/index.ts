@@ -14,11 +14,12 @@ app.register(pingRoutes)
 app.register(taskRoutes)
 app.register(stateRoutes)
 
-const port = process.env.PORT || 3333
+const port = Number(process.env.PORT || 3333)
 
-app.listen().then(() => {
-  console.log(`🚀 HTTP server running on http://localhost:${port}`)
-})
-
-// @ts-ignore
-module.exports.handler = serverless(app)
+app
+  .listen({
+    port,
+  })
+  .then(() => {
+    console.log(`🚀 HTTP server running on http://localhost:${port}`)
+  })
