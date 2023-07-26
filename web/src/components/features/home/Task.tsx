@@ -8,18 +8,23 @@ type TaskProps = {
 
 export default function Task({ task }: TaskProps) {
   const { title, state, id } = task
-  const { deleteTask, setDragTask, markAsDone } = useTask((s) => ({
+  const { deleteTask, setDragTask, markAsDone, moveTask } = useTask((s) => ({
     deleteTask: s.deleteTask,
     setDragTask: s.setDraggedTask,
     markAsDone: s.markAsDone,
+    moveTask: s.moveTask,
   }))
 
   const handleDeleteTask = () => {
     deleteTask(id)
   }
 
-  const handleMarkAsDone = () => {
-    markAsDone(id)
+  const handleMarkAsDone = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      markAsDone(id)
+    } else {
+      moveTask(id, 'planned', false)
+    }
   }
 
   return (
@@ -28,25 +33,23 @@ export default function Task({ task }: TaskProps) {
         draggable
         onDragStart={() => setDragTask(task.id)}
         className={clsx(
-          'flex cursor-move flex-col items-start gap-2 rounded-lg bg-white p-2 ',
+          'mt-2 flex cursor-move flex-col items-start gap-2 rounded-lg bg-primary p-2 ',
           {
             'bg-gray-300': state === 'done',
           }
         )}
       >
-        <div className="flex w-full items-center gap-2">
+        <div className="flex items-center justify-center gap-2">
           <input
             type="checkbox"
             onChange={handleMarkAsDone}
-            disabled={state === 'done'}
             checked={state === 'done'}
             className={clsx(
-              'cursor-pointer rounded-md border-2 border-gray-300',
-              { 'bg-gray-950': state === 'done' }
+              'border-1 cursor-pointer border-gray-700   bg-secondary '
             )}
           />
           <span
-            className={clsx('text-sm font-normal', {
+            className={clsx('text-base font-thin text-white', {
               'line-through': state === 'done',
             })}
           >
@@ -57,14 +60,17 @@ export default function Task({ task }: TaskProps) {
           <Trash
             size={16}
             onClick={handleDeleteTask}
-            className="cursor-pointer"
+            className="cursor-pointer text-white hover:text-red-500"
           />
           <span
-            className={clsx('rounded-md bg-tertiary p-1 text-sm', {
-              '!bg-green-700 text-white': state === 'done',
-            })}
+            className={clsx(
+              'rounded-none bg-secondary p-1 text-xs font-thin text-white',
+              {
+                '!bg-green-700 text-white': state === 'done',
+              }
+            )}
           >
-            {state}
+            {id.slice(0, 8)}
           </span>
         </div>
       </div>

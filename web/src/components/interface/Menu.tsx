@@ -3,6 +3,9 @@ import { useState } from 'react'
 import { useTask } from '@/hooks/use-task'
 import notify from '../Notify'
 import clsx from 'clsx'
+import { Modal } from '@/components/Modal'
+import Button from '@/components/Button'
+
 export default function Menu() {
   const { deleteAllTasks, total } = useTask((s) => ({
     deleteAllTasks: s.deleteAllTasks,
@@ -38,62 +41,45 @@ export default function Menu() {
       {confirm && (
         <>
           {/* create a modal to confirm the action */}
-          <div className="fixed inset-0 z-10 overflow-y-auto">
-            <div className="flex min-h-screen items-center justify-center">
-              <div
-                className="fixed inset-0 transition-opacity"
-                aria-hidden="true"
+          <Modal.Root>
+            <Modal.Header>
+              <h2 className="text-lg font-medium text-gray-900">
+                Are you sure you want to delete all tasks?
+              </h2>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="p-4">
+                <p className="flex flex-col text-gray-700">
+                  <span>
+                    All tasks will be deleted and this action cannot be undone.
+                  </span>
+                  <span className="flex  items-center gap-2">
+                    <input
+                      name="confirm"
+                      id="confirm"
+                      type="checkbox"
+                      className=""
+                    />
+                    <label
+                      htmlFor="confirm"
+                      className="cursor-pointer font-bold"
+                    >
+                      I understand that tasks will be deleted
+                    </label>
+                  </span>
+                </p>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                onClick={handleOnDelete}
+                className="bg-red-500 hover:bg-red-800"
               >
-                <div className="absolute inset-0 bg-gray-900 opacity-75"></div>
-              </div>
-
-              <div className="mx-auto max-w-lg transform overflow-hidden rounded-lg bg-white shadow-xl transition-all">
-                <div className="border-b bg-gray-100 px-4 py-3">
-                  <h2 className="text-lg font-medium text-gray-900">
-                    Are you sure you want to delete all tasks?
-                  </h2>
-                </div>
-
-                <div className="p-4">
-                  <p className="flex flex-col text-gray-700">
-                    <span>
-                      All tasks will be deleted and this action cannot be
-                      undone. You must confirm your action.
-                    </span>
-                    <span className="flex  items-center gap-2">
-                      <input
-                        name="confirm"
-                        id="confirm"
-                        type="checkbox"
-                        className=""
-                      />
-                      <label
-                        htmlFor="confirm"
-                        className="cursor-pointer font-bold"
-                      >
-                        I understand that tasks will be deleted
-                      </label>
-                    </span>
-                  </p>
-                </div>
-
-                <div className="flex justify-end border-t bg-gray-100 px-4 py-3">
-                  <button
-                    onClick={handleOnDelete}
-                    className="rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700"
-                  >
-                    Delete
-                  </button>
-                  <button
-                    onClick={() => setConfirm(false)}
-                    className="ml-2 rounded bg-gray-300 px-4 py-2 font-bold text-gray-800 hover:bg-gray-400"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+                Delete
+              </Button>
+              <Button onClick={() => setConfirm(false)}>Cancel</Button>
+            </Modal.Footer>
+          </Modal.Root>
         </>
       )}
     </div>

@@ -1,14 +1,16 @@
 import { StateCreator, create } from 'zustand'
 import { api } from '@/lib/api'
-import { persist } from 'zustand/middleware'
 import notify from '@/components/Notify'
 
 type TaskStore = {
   tasks: Task[]
+  states: State[]
   draggedTask: string | null | undefined
   setTasks: (tasks: Task[]) => void
+  pushTasks: (tasks: Task[]) => void
+  setStates: (states: State[]) => void
   setDraggedTask: (id?: string) => void
-  addTask: (todo: Task) => void
+  addTask: (todo: Task, cb?: () => void) => void
   deleteTask: (id: string) => void
   deleteAllTasks: () => void
   moveTask: (id: string, state: keyof typeof States, done?: boolean) => void
@@ -17,11 +19,14 @@ type TaskStore = {
 
 const store: StateCreator<TaskStore> = (set, getState) => ({
   tasks: [],
+  states: [],
   draggedTask: null,
+  pushTasks: (tasks: Task[]) => set((s) => ({ tasks: [...s.tasks, ...tasks] })),
+  setStates: (states: State[]) => set({ states }),
   setTasks: (tasks: Task[]) =>
-    set((s) => ({
-      tasks: [...s.tasks, ...tasks],
-    })),
+    set({
+      tasks,
+    }),
   deleteAllTasks: async () => {
     try {
       await api.delete<Task>('/task/all')
@@ -38,7 +43,7 @@ const store: StateCreator<TaskStore> = (set, getState) => ({
     }
   },
   setDraggedTask: (id?: string) => set((s) => ({ draggedTask: id })),
-  addTask: async ({ id, title, state }: Task) => {
+  addTask: async ({ id, title, state }: Task, cb?: () => void) => {
     // validate title
     if (!title || title.length === 0 || title.trim().length === 0 || !state) {
       const message = !state
@@ -62,6 +67,8 @@ const store: StateCreator<TaskStore> = (set, getState) => ({
       notify({
         message: 'Task added successfully',
       })
+
+      cb && cb()
     } catch (error) {
       console.log(error)
       notify({
@@ -94,7 +101,14 @@ const store: StateCreator<TaskStore> = (set, getState) => ({
       })
       set((s) => ({
         tasks: s.tasks.map((task) =>
-          task.id === id ? { ...task, done: true, state: 'done' } : task
+          task.id === id
+            ? {
+                ...task,
+                done: true,
+                state: 'done',
+                doneAt: new Date().toISOString(),
+              }
+            : task
         ),
       })),
         notify({
@@ -110,14 +124,21 @@ const store: StateCreator<TaskStore> = (set, getState) => ({
   },
   moveTask: async (id: string, state: keyof typeof States, done?: boolean) => {
     try {
-      const response = await api.put<Task>(`/task/${id}`, { state, done })
-      const task = response.data
+      await api.put<Task>(`/task/${id}`, { state, done })
       set((s) => ({
         tasks: s.tasks.map((task) =>
           task.id === id ? { ...task, state, done } : task
         ),
       }))
-    } catch (error) {}
+      notify({
+        message: 'Task moved successfully',
+      })
+    } catch (error) {
+      notify({
+        message: 'An error occurred while updating the task',
+        type: 'error',
+      })
+    }
   },
 })
 

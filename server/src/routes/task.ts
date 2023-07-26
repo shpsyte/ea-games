@@ -9,26 +9,56 @@ enum States {
   'done' = 'done',
 }
 
+async function filterState(
+  state: keyof typeof States,
+  take: number,
+  skip: number,
+  title?: string,
+) {
+  const data = await prisma.task.findMany({
+    where: {
+      state,
+      title: {
+        contains: title,
+      },
+    },
+    take,
+    skip,
+    orderBy: [state === 'done' ? { doneAt: 'desc' } : { title: 'asc' }],
+  })
+
+  return data.map((task) => ({
+    id: task.id,
+    title: task.title,
+    createdAt: task.createdAt,
+    done: task.done,
+    state: task.state,
+    doneAt: task.doneAt,
+  }))
+}
+
 export async function taskRoutes(app: FastifyInstance) {
-  app.get('/tasks/all', async () => {
-    const task = await prisma.task.findMany({
-      orderBy: [
-        {
-          title: 'asc',
-        },
-        {
-          createdAt: 'desc',
-        },
-      ],
+  app.get('/tasks/all/:title', async (req) => {
+    // get max 10 tasks by column
+    const paramsSchema = z.object({
+      title: z.string().optional(),
     })
 
-    return task.map((task) => ({
-      id: task.id,
-      title: task.title,
-      createdAt: task.createdAt,
-      done: task.done,
-      state: task.state,
-    }))
+    const { title } = paramsSchema.parse(req.params)
+
+    const result = {
+      planned: await filterState('planned', 100, 0, title),
+      ongoing: await filterState('ongoing', 100, 0, title),
+      onhold: await filterState('onhold', 100, 0, title),
+      done: await filterState('done', 10, 0, title),
+    }
+
+    return [
+      ...result.planned,
+      ...result.ongoing,
+      ...result.onhold,
+      ...result.done,
+    ]
   })
 
   app.get('/tasks/:state/:skip/:take/:q?', async (req, res) => {
@@ -42,40 +72,25 @@ export async function taskRoutes(app: FastifyInstance) {
     // making sure that the state is valid
     const { state, skip = '0', take = '10', q } = paramsSchema.parse(req.params)
 
-    const where = {
-      state,
-      title: {
-        contains: q,
-      },
-    }
     try {
-      const total = await prisma.task.count({
-        where,
-      })
-
-      const task = await prisma.task.findMany({
-        where,
-        skip: Number(skip),
-        take: Number(take),
-        orderBy: [
-          {
-            title: 'asc',
-          },
-          {
-            createdAt: 'desc',
-          },
-        ],
-      })
+      const task = await filterState(
+        state as keyof typeof States,
+        Number(take),
+        Number(skip),
+        q,
+      )
 
       const tasks = task.map((task) => ({
         id: task.id,
         title: task.title,
         createdAt: task.createdAt,
         done: task.done,
+        doneAt: task.doneAt,
+        state: task.state,
       }))
 
       return {
-        total,
+        total: 0,
         tasks,
       }
     } catch (error) {
@@ -182,12 +197,16 @@ export async function taskRoutes(app: FastifyInstance) {
       },
     })
 
+    const isDone = done ?? task.done
+    const doneAt = done ? new Date() : null
+
     task = await prisma.task.update({
       where: {
         id,
       },
       data: {
-        done: done ?? task.done,
+        done: isDone,
+        doneAt,
         state: state ?? task.state,
       },
     })

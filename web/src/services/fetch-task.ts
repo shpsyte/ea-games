@@ -22,8 +22,8 @@ export const fetchTask = async ({
   return data
 }
 
-export const fetchAllTask = async () => {
-  const response = await api.get<Task[]>(`/tasks/all`)
+export const fetchAllTask = async (q?: string) => {
+  const response = await api.get<Task[]>(`/tasks/all/${q ?? ''}`)
   const { data } = response
 
   return data

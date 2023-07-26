@@ -3,6 +3,7 @@ import cors from '@fastify/cors'
 import fastify from 'fastify'
 import { pingRoutes } from './routes/ping'
 import { taskRoutes } from './routes/task'
+import { stateRoutes } from './routes/states'
 
 const app = fastify()
 
@@ -11,6 +12,7 @@ app.register(cors, {
 })
 app.register(pingRoutes)
 app.register(taskRoutes)
+app.register(stateRoutes)
 
 app
   .listen({

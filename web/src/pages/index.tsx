@@ -2,33 +2,51 @@ import { Column } from '@/components/features/home/Columns'
 import SearchBar from '@/components/features/home/SearchBar'
 import AppLayout from '@/components/interface/AppLayout'
 import { useTask } from '@/hooks/use-task'
-import { api } from '@/lib/api'
+import { fetchState } from '@/services/fetch-state'
 import { fetchAllTask, fetchTask } from '@/services/fetch-task'
-import { use, useCallback, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { shallow } from 'zustand/shallow'
 
 export default function Home() {
-  const { setTasks } = useTask((s) => ({
-    setTasks: s.setTasks,
-  }))
-  const load = useCallback(async () => {
-    const allTask = await fetchAllTask()
-    setTasks(allTask)
-  }, [])
+  // initialize the state
+
+  const { setTasks, states, setSate } = useTask(
+    (s) => ({
+      setTasks: s.setTasks,
+      states: s.states.filter((a) => a.show),
+      setSate: s.setStates,
+    }),
+    shallow
+  )
 
   useEffect(() => {
-    load()
+    const states = async () => {
+      const states = await fetchState()
+      setSate(states)
+    }
+    const tasks = async () => {
+      const allTask = await fetchAllTask()
+      setTasks(allTask)
+    }
+
+    states().then(() => tasks())
   }, [])
 
   return (
     <AppLayout>
-      <main className="flex flex-col">
+      <main className="flex flex-col overflow-x-hidden">
         <SearchBar />
 
-        <div className="mt-9 flex gap-4 ">
-          <Column state="planned" />
-          <Column state="ongoing" />
-          {/* <Column state="ONHOLD" /> */}
-          <Column state="done" />
+        <div className="mt-9 flex flex-col gap-2 tablet:flex-row  ">
+          {states.map((state) => {
+            return (
+              <Column
+                key={state.id}
+                state={state.id as keyof typeof States}
+                config={state.config as any}
+              />
+            )
+          })}
         </div>
       </main>
     </AppLayout>

@@ -18,5 +18,6 @@ export default function notify({ message, type = 'success' }: NotifyProps) {
   return new Toast(`${message}`, {
     position: 'top',
     style,
+    timeout: 2000,
   })
 }

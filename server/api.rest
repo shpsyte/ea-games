@@ -6,6 +6,10 @@ GET {{ baseUrl }}/ping
 Content-Type: application/json
 
 ### take all
+GET {{ baseUrl }}/states/
+Content-Type: application/json
+
+### take all
 GET {{ baseUrl }}/tasks/all
 Content-Type: application/json
 

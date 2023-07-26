@@ -5,6 +5,9 @@
 :root {
   --scrollColor: cornflowerblue;
 }
+body {
+  background-color: #1d2125;
+}
 
 /* Firefox */
 * {

@@ -16,9 +16,11 @@ module.exports = {
     },
     extend: {
       colors: {
-        primary: '#333333',
-        secondary: '#222222',
+        primary: '#1D2125',
+        column: '#22272B',
+        secondary: '#161A1D',
         tertiary: '#cccccc',
+        white: '#B6C2CF',
       },
       fontFamily: {
         sans: ['roboto', 'sans-serif'],

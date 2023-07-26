@@ -26,9 +26,10 @@ datasource db {
 // }
 
 model Task {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   title     String
-  state     String   @default("planned")
-  createdAt DateTime @default(now())
-  done      Boolean? @default(false)
+  state     String    @default("planned")
+  createdAt DateTime  @default(now())
+  doneAt    DateTime?
+  done      Boolean?  @default(false)
 }
