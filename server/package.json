@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/api/serverless.js",
+    "dev": "tsx watch src/server.ts",
     "vercel": "vercel dev"
   },
   "keywords": [],
