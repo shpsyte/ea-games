@@ -1,6 +1,6 @@
 import React from 'react'
 import { Trash } from 'react-feather'
-import { useTodo } from '@/hooks/use-todo'
+import { useTask } from '@/hooks/use-task'
 import { clsx } from 'clsx'
 type TaskProps = {
   task: Task
@@ -8,7 +8,7 @@ type TaskProps = {
 
 export default function Task({ task }: TaskProps) {
   const { title, state, id } = task
-  const { deleteTask, setDragTask, markAsDone } = useTodo((s) => ({
+  const { deleteTask, setDragTask, markAsDone } = useTask((s) => ({
     deleteTask: s.deleteTask,
     setDragTask: s.setDraggedTask,
     markAsDone: s.markAsDone,
@@ -30,7 +30,7 @@ export default function Task({ task }: TaskProps) {
         className={clsx(
           'flex cursor-move flex-col items-start gap-2 rounded-lg bg-white p-2 ',
           {
-            'bg-gray-300': state === 'DONE',
+            'bg-gray-300': state === 'done',
           }
         )}
       >
@@ -38,16 +38,16 @@ export default function Task({ task }: TaskProps) {
           <input
             type="checkbox"
             onChange={handleMarkAsDone}
-            disabled={state === 'DONE'}
-            checked={state === 'DONE'}
+            disabled={state === 'done'}
+            checked={state === 'done'}
             className={clsx(
               'cursor-pointer rounded-md border-2 border-gray-300',
-              { 'bg-gray-950': state === 'DONE' }
+              { 'bg-gray-950': state === 'done' }
             )}
           />
           <span
             className={clsx('text-sm font-normal', {
-              'line-through': state === 'DONE',
+              'line-through': state === 'done',
             })}
           >
             {title}
@@ -61,7 +61,7 @@ export default function Task({ task }: TaskProps) {
           />
           <span
             className={clsx('rounded-md bg-tertiary p-1 text-sm', {
-              'bg-green-700 text-white': state === 'DONE',
+              '!bg-green-700 text-white': state === 'done',
             })}
           >
             {state}

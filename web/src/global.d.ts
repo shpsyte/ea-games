@@ -7,6 +7,10 @@ type MetaDataType = {
   noIndex?: boolean
 }
 
+type ApiResponse<T> = {
+  data: T
+}
+
 type Task = {
   id: string
   title: string
@@ -16,8 +20,8 @@ type Task = {
 }
 
 enum States {
-  'PLANNED' = 'PLANNED',
-  'ONGOING' = 'ON GOING',
-  'ONHOLD' = 'ON HOLD',
-  'DONE' = 'DONE',
+  'planned' = 'planned',
+  'ongoing' = 'on going',
+  'onhold' = 'on hold',
+  'done' = 'done',
 }

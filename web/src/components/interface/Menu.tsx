@@ -1,9 +1,13 @@
 import { useState } from 'react'
 
-import { useTodo } from '@/hooks/use-todo'
+import { useTask } from '@/hooks/use-task'
 import notify from '../Notify'
+import clsx from 'clsx'
 export default function Menu() {
-  const deleteAllTasks = useTodo((s) => s.deleteAllTasks)
+  const { deleteAllTasks, total } = useTask((s) => ({
+    deleteAllTasks: s.deleteAllTasks,
+    total: s.tasks.length,
+  }))
   const [confirm, setConfirm] = useState(false)
 
   const handleOnDelete = () => {
@@ -22,8 +26,11 @@ export default function Menu() {
       <h2 className="text-2xl font-bold text-white">Marvelous v2.0</h2>
       {!confirm && (
         <button
+          disabled={total === 0}
           onClick={() => setConfirm(true)}
-          className="cursor-pointer underline outline-none "
+          className={clsx('cursor-pointer underline outline-none ', {
+            'cursor-default text-gray-500': total === 0,
+          })}
         >
           delete all tasks
         </button>

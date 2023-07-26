@@ -1,32 +1,25 @@
 import notify from '@/components/Notify'
-import { useTodo } from '@/hooks/use-todo'
+import { useTask } from '@/hooks/use-task'
 import { useMemo, useRef, useState } from 'react'
 import { v4 } from 'uuid'
 
 export default function SearchBar() {
-  const { addTask, task } = useTodo((s) => ({
+  const { addTask, task } = useTask((s) => ({
     addTask: s.addTask,
     task: s.tasks,
   }))
   const refInput = useRef<HTMLInputElement>(null)
 
   const onAddTask = () => {
-    // validate the input
-    if (!refInput?.current?.value) {
-      notify({
-        message: 'The task name is required',
-        type: 'error',
-      })
-      return
+    addTask({
+      title: refInput?.current?.value,
+      state: 'planned',
+    } as Task)
+
+    if (refInput.current) {
+      refInput.current.value = ''
+      refInput.current.focus()
     }
-    const task = {
-      id: v4(),
-      title: refInput?.current?.value || '',
-      state: 'PLANNED',
-    } as Task
-    addTask(task)
-    refInput.current.value = ''
-    refInput.current.focus()
   }
 
   return (

@@ -87,8 +87,7 @@ export async function taskRoutes(app: FastifyInstance) {
 
   app.post('/task', async (req, res) => {
     const bodySchema = z.object({
-      title: z.string(),
-      // done: z.boolean().optional(),
+      title: z.string().min(1),
       state: z.string().refine((state) => {
         return state in States
       }),
@@ -159,5 +158,40 @@ export async function taskRoutes(app: FastifyInstance) {
     await prisma.task.deleteMany()
 
     return true
+  })
+
+  app.put('/task/:id', async (req) => {
+    const paramsSchema = z.object({
+      id: z.string().uuid(),
+    })
+
+    const { id } = paramsSchema.parse(req.params)
+
+    const bodySchema = z.object({
+      done: z.boolean(),
+      state: z.string().refine((state) => {
+        return state in States
+      }),
+    })
+
+    const { done, state } = bodySchema.parse(req.body)
+
+    let task = await prisma.task.findUniqueOrThrow({
+      where: {
+        id,
+      },
+    })
+
+    task = await prisma.task.update({
+      where: {
+        id,
+      },
+      data: {
+        done: done ?? task.done,
+        state: state ?? task.state,
+      },
+    })
+
+    return task
   })
 }
