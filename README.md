@@ -22,7 +22,7 @@ Welcome to the Code Exercise for HatchBetter  🌍
  - One-Delete Task
  - Sync board: If you open the app in two different browsers, you will see the same board in both of them.   
  
-![Alt text](todo.gif)
+![Alt text](image.png)
 
 ## `Front-end`
 
