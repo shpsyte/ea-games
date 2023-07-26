@@ -12,7 +12,17 @@ Welcome to the Code Exercise for HatchBetter  🌍
 
 
 ## `features`
-![Alt text](image.png)
+ - Drag-and-drop interface 
+ - State management by zustand
+ - Infinity-Scroll in columns 
+ - Multiple columns
+ - All Logic on server-side  
+ - Responsive Design 
+ - Unit Tests
+ - One-Delete Task
+ - Sync board: If you open the app in two different browsers, you will see the same board in both of them.   
+ 
+![Alt text](todo.gif)
 
 ## `Front-end`
 
@@ -41,10 +51,10 @@ To get started with this app, follow these steps:
 git clone https://github.com/shpsyte/ea-games.git
 ```
 
-2. Install the dependencies on each folder web and server:
+2. Install the dependencies on each folder `web` and `server`:
 
 ```bash
-yarn install   
+yarn install 
 ```
 
 3. Under the server folder run:
