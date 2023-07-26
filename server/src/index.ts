@@ -4,7 +4,7 @@ import fastify from 'fastify'
 import { pingRoutes } from './routes/ping'
 import { taskRoutes } from './routes/task'
 import { stateRoutes } from './routes/states'
-
+import serverless from 'serverless-http'
 const app = fastify()
 
 app.register(cors, {
@@ -22,3 +22,6 @@ app
   .then(() => {
     console.log(`🚀 HTTP server running on http://localhost:${port}`)
   })
+
+// @ts-ignore
+module.exports.handler = serverless(app)

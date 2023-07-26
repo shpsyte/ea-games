@@ -25,6 +25,7 @@
     "@fastify/cors": "^8.3.0",
     "@prisma/client": "^5.0.0",
     "fastify": "^4.20.0",
+    "serverless-http": "^3.2.0",
     "zod": "^3.21.4"
   }
 }
