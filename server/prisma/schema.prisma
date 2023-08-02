@@ -10,21 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// type Task = {
-//   id: string
-//   title: string
-//   state: keyof typeof States
-//   createdAt: string
-//   done?: boolean
-// }
-
-// enum States {
-//   'PLANNED' = 'PLANNED',
-//   'ONGOING' = 'ON GOING',
-//   'ONHOLD' = 'ON HOLD',
-//   'DONE' = 'DONE',
-// }
-
 model Task {
   id        String    @id @default(uuid())
   title     String

@@ -13,7 +13,7 @@ app.register(pingRoutes)
 app.register(taskRoutes)
 app.register(stateRoutes)
 
-const port = Number(process.env.PORT)
+const port = Number(process.env.PORT || 3333)
 
 app
   .listen({
