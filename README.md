@@ -39,9 +39,16 @@ Welcome to the Code Exercise for HatchBetter  🌍
 - 🏎️ **[Node.js](https://nodejs.org/en/)** 
 - 💅 **[Fastify](https://fastify.dev/)** 
 - 🛠️ **[Typescrit](https://www.typescriptlang.org/)** 
-- 📊 **[SQLlite](https://www.https://www.sqlite.org/index.html)** -
+- 📊 **[SQLlite](https://www.https://www.sqlite.org/index.html)** 
+- 📊 **[Postgresql](https://www.postgresql.org/)** -
 
-## 🎯 Getting Started
+## Check it out at
+- **[TaskApp WebSite](https://ea-games-git-main-shpsyte.vercel.app/)** -
+
+
+
+
+## 🎯 Or clone and install locally
 
 To get started with this app, follow these steps:
 
