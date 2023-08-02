@@ -13,11 +13,12 @@ app.register(pingRoutes)
 app.register(taskRoutes)
 app.register(stateRoutes)
 
-const port = Number(process.env.PORT || 3333)
+const port = Number(process.env.PORT)
 
 app
   .listen({
     port,
+    host: '0.0.0.0',
   })
   .then(() => {
     console.log(`🚀 HTTP server running on http://localhost:${port}`)
