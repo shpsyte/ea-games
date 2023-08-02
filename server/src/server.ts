@@ -10,8 +10,8 @@ app.register(cors, {
   origin: '*',
 })
 app.register(pingRoutes)
-app.register(taskRoutes)
 app.register(stateRoutes)
+app.register(taskRoutes)
 
 const port = Number(process.env.PORT || 3333)
 

@@ -2,15 +2,8 @@ import { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prima'
 import { z } from 'zod'
 
-enum States {
-  'planned' = 'planned',
-  'ongoing' = 'on going',
-  'onhold' = 'on hold',
-  'done' = 'done',
-}
-
 async function filterState(
-  state: keyof typeof States,
+  state: string,
   take: number,
   skip: number,
   title?: string,
@@ -73,12 +66,7 @@ export async function taskRoutes(app: FastifyInstance) {
     const { state, skip = '0', take = '10', q } = paramsSchema.parse(req.params)
 
     try {
-      const task = await filterState(
-        state as keyof typeof States,
-        Number(take),
-        Number(skip),
-        q,
-      )
+      const task = await filterState(state, Number(take), Number(skip), q)
 
       const tasks = task.map((task) => ({
         id: task.id,
@@ -103,9 +91,7 @@ export async function taskRoutes(app: FastifyInstance) {
   app.post('/task', async (req, res) => {
     const bodySchema = z.object({
       title: z.string().min(1),
-      state: z.string().refine((state) => {
-        return state in States
-      }),
+      state: z.string(),
     })
 
     try {
@@ -184,9 +170,7 @@ export async function taskRoutes(app: FastifyInstance) {
 
     const bodySchema = z.object({
       done: z.boolean(),
-      state: z.string().refine((state) => {
-        return state in States
-      }),
+      state: z.string(),
     })
 
     const { done, state } = bodySchema.parse(req.body)
